@@ -6,7 +6,7 @@ import boto
 reload(sys)
 sys.setdefaultencoding('utf8')
 
-def update_alarm(alarm_name):
+def update_alarm(alarm_name, description):
     conn = boto.connect_cloudwatch()
 
     def get_alarm():
@@ -21,15 +21,11 @@ def update_alarm(alarm_name):
     # https://github.com/boto/boto/issues/1311
     alarm.comparison = alarm._cmp_map.get(alarm.comparison)
 
-    print("this is " + alarm.name)
+    print(alarm.name + " : " + alarm.description)
     alarm.description = "this is " + alarm.name
     conn.update_alarm(alarm)
 
-
-
-    # update actually creates a new alarm because the name has changed, so
-    # we have to manually delete the old one
 if __name__ == '__main__':
-    alarm_name, = sys.argv[1:2]
+    alarm_name, description = sys.argv[1:3]
 
-    update_alarm(alarm_name)
+    update_alarm(alarm_name, description)
